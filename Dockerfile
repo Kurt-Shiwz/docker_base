@@ -1,11 +1,13 @@
+# os base
 FROM centos:centos6.7
 
 RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/baichuan.conf && \
+    echo -e "[nginx]\nname=nginx repo\nbaseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/\ngpgcheck=0\nenabled=1" >/etc/yum.repos.d/nginx.repo && \
     rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm && \
     rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
-  
-RUN yum -y install unzip tar wget gcc gcc-c++ binutils gdb valgrind pkgconfig lsof nginx mysql mysql-devel \
-       boost boost-devel fcgi fcgi-devel spawn-fcgi subversion openssh-server openssh-clients php php-fpm && \
+
+RUN yum -y install unzip tar wget rsyslog subversion openssh-server openssh-clients \
+        nginx boost boost-devel fcgi fcgi-devel spawn-fcgi && \
     yum clean all
 
 RUN sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config && \
